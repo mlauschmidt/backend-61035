@@ -20,12 +20,13 @@ class ProductManager {
             const productExists = this.products.findIndex(product => product.code === data.code);
 
             if (productExists === -1){
-                return this.products.push(newProduct);
+                this.products.push(newProduct);
+                return `Producto agregado correctamente`;
             } else {
-                console.log(`Ya existe un producto con el código ${data.code}`);
+                return `Ya existe un producto con el código ${data.code}`;
             }
         } else {
-            console.log(`Todos los campos son obligatorios`);
+            return `Todos los campos son obligatorios`;
         }
     }
 
@@ -85,10 +86,10 @@ const product4 = {
     stock: 0
 };
 
-manager.addProduct(product1);
-manager.addProduct(product2);
-manager.addProduct(product3);
-manager.addProduct(product4);
+console.log(manager.addProduct(product1));
+console.log(manager.addProduct(product2));
+console.log(manager.addProduct(product3));
+console.log(manager.addProduct(product4));
 
 console.log(manager.getProducts());
 console.log(manager.getProductById(1));
