@@ -1,5 +1,10 @@
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+
+const ProductManager = require('./ProductManager');
+const file = path.join(__dirname, '../data/products.json');
+const productManager = new ProductManager(file);
 
 class CartManager {
     constructor(path){
@@ -15,7 +20,7 @@ class CartManager {
                 return [];
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -27,10 +32,10 @@ class CartManager {
             if (cart){
                 return cart;
             } else {
-                return null;
+                throw new Error(`Carrito no encontrado`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -48,7 +53,7 @@ class CartManager {
             
             return newCart;
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -58,25 +63,31 @@ class CartManager {
             const cart = carts.find(cart => cart.id === cartId);
 
             if (cart){
-                const prodIndex = cart.products.findIndex(product => product.id === prodId);
-                
-                if (prodIndex === -1){
-                    cart.products.push({ 
-                        id: prodId, 
-                        quantity: 1 
-                    })
-                } else {
-                    cart.products[prodIndex].quantity ++;
-                }
-                
-                await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+                const product = await productManager.getProductById(prodId);
 
-                return cart;
+                if (product){
+                    const prodIndex = cart.products.findIndex(product => product.id === prodId);
+                
+                    if (prodIndex === -1){
+                        cart.products.push({ 
+                            id: prodId, 
+                            quantity: 1 
+                        })
+                    } else {
+                        cart.products[prodIndex].quantity ++;
+                    }
+                    
+                    await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+
+                    return cart;
+                } else {
+                    throw new Error(`Producto no encontrado`);
+                }
             } else {
-                return null;
+                throw new Error(`Carrito no encontrado`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 }

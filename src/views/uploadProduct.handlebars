@@ -1,0 +1,18 @@
+<h1>CARGA DE PRODUCTOS</h1>
+
+<div>
+    <form id="productForm">
+        Nombre: <input type="text" name="title"><br><br>
+        Categoría: <input type="text" name="category"><br><br>
+        Descripción: <input type="text" name="description"><br><br>
+        Precio: $ <input type="number" name="price"><br><br>
+        Código: <input type="number" name="code"><br><br>
+        Stock: <input type="number" name="stock"><br><br>
+        Imágenes: <input type="file" name="images" multiple><br><br>
+
+        <input type="submit" value="CARGAR">
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/uploadProduct.js"></script>

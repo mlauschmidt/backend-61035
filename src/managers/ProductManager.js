@@ -15,7 +15,7 @@ class ProductManager {
                 return [];
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -27,10 +27,10 @@ class ProductManager {
             if (product){
                 return product;
             } else {
-                return null;
+                throw new Error(`Producto no encontrado`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -52,10 +52,10 @@ class ProductManager {
                 
                 return newProduct;
             } else {
-                return { msg: `Ya existe un producto con el código ${data.code}` };
+                throw new Error(`Ya existe un producto con el código ${data.code}`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -76,10 +76,10 @@ class ProductManager {
                     
                 return updatedProduct;
             } else {
-                return null;
+                throw new Error(`Producto no encontrado`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 
@@ -92,12 +92,15 @@ class ProductManager {
                 products.splice(prodIndex, 1);
                 await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
                     
-                return { msg: `Producto eliminado correctamente` };
+                return { 
+                    id: prodId, 
+                    msg: `Producto ID: ${prodId} eliminado correctamente` 
+                };
             } else {
-                return null;
+                throw new Error(`Producto no encontrado`);
             }
         } catch (error) {
-            return error;
+            throw (error);
         }
     }
 }
