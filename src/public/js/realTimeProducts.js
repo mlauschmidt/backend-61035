@@ -2,7 +2,7 @@ const socketClient = io();
 
 const products = document.getElementById('productsContainer');
 
-socketClient.on('producto_nuevo', (product) => {
+socketClient.on('newProduct', (product) => {
     let productHTML = `
         <div id="prod_${product.id}">
             <h3>${product.title}</h3>
@@ -40,7 +40,7 @@ const deleteProduct = (prodId) => {
     .catch (e => console.log(e))
 }
 
-socketClient.on('producto_eliminado', (id) => {
+socketClient.on('deleteProduct', (id) => {
     const prodId = document.getElementById(`prod_${id}`);
 
     productsContainer.removeChild(prodId);

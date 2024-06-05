@@ -1,12 +1,11 @@
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
-
-const ProductManager = require('./productDao');
+const ProductDaoFS = require('./productDao');
 const file = path.join(__dirname, './data/products.json');
-const productManager = new ProductManager(file);
+const productDaoFS = new ProductDaoFS(file);
 
-class CartManager {
+class CartDaoFS {
     constructor(path){
         this.path = path;
     }
@@ -63,14 +62,14 @@ class CartManager {
             const cart = carts.find(cart => cart.id === cartId);
 
             if (cart){
-                const product = await productManager.getProductById(prodId);
+                const product = await productDaoFS.getProductById(prodId);
 
                 if (product){
-                    const prodIndex = cart.products.findIndex(product => product.id === prodId);
+                    const prodIndex = cart.products.findIndex(product => product.product_id === prodId);
                 
                     if (prodIndex === -1){
                         cart.products.push({ 
-                            id: prodId, 
+                            product_id: prodId, 
                             quantity: 1 
                         })
                     } else {
@@ -92,4 +91,4 @@ class CartManager {
     }
 }
 
-module.exports = CartManager;
+module.exports = CartDaoFS;

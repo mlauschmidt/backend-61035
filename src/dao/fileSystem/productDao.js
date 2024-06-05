@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
-class ProductManager {
+class ProductDaoFS {
     constructor(path){
         this.path = path;
     }
@@ -105,4 +105,4 @@ class ProductManager {
     }
 }
 
-module.exports = ProductManager;
+module.exports = ProductDaoFS;

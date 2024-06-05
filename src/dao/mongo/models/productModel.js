@@ -24,10 +24,16 @@ const productSchema = new Schema({
     },
     stock: {
         type: Number,
-        required: true
+        required: true,
     },
-    thumbnail: Array,
-    status: Boolean
+    thumbnail: {
+        type: Array,
+        default: []
+    },
+    status: {
+        type: Boolean,
+        default: true
+    }
 })
 
 const productModel = model('products', productSchema);

@@ -2,10 +2,10 @@
 
 <div id="productsContainer">
     {{#each products}}
-        <div id="prod_{{id}}">
+        <div id="prod_{{id}}{{_id}}">
             <h3>{{title}}</h3>
             <ul>
-                <li>Id: {{id}}</li>
+                <li>Id: {{id}}{{_id}}</li>
                 <li>Categoría: {{category}}</li>
                 <li>Descripción: {{description}}</li>
                 <li>Precio: ${{price}}</li>
@@ -18,4 +18,3 @@
         </div>    
     {{/each}}    
 </div>
-
