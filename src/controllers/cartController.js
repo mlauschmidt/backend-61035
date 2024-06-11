@@ -33,12 +33,35 @@ class CartController {
         }
     }
 
-    async updateCart (req, res, next) {
+    async addProdToCart (req, res, next) {
         try {
             const { cid, pid } = req.params;
-            const updatedCart = await cartService.updateCart(cid, pid);
+            const qty = req.body.quantity;
+            const updatedCart = await cartService.addProdToCart(cid, pid, qty);
             
             return res.status(200).json(updatedCart);
+        } catch (error) {
+            next (error);
+        }
+    }
+
+    async deleteProdInCart (req, res, next) {
+        try {
+            const { cid, pid } = req.params;
+            const updatedCart = await cartService.deleteProdInCart(cid, pid);
+            
+            return res.status(200).json({ message: updatedCart.msg });
+        } catch (error) {
+            next (error);
+        }
+    }
+
+    async clearCart (req, res, next) {
+        try {
+            const { cid } = req.params;
+            const clearedCart = await cartService.clearCart(cid);
+
+            return res.status(200).json({ message: clearedCart.msg });
         } catch (error) {
             next (error);
         }

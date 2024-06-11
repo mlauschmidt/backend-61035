@@ -6,9 +6,9 @@ const ProductDaoMongo = require('../dao/mongo/productDao');
 const productDao = new ProductDaoMongo();
 
 class ProductService {
-    async getProducts () {
+    async getProducts (page, limit, query, sort) {
         try {
-            return await productDao.getProducts();
+            return await productDao.getProducts(page, limit, query, sort);
         } catch (error) {
             throw (error);
         }

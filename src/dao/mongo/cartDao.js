@@ -1,6 +1,4 @@
 const cartModel = require('./models/cartModel');
-const ProductDaoMongo = require('./productDao');
-const productDaoMongo = new ProductDaoMongo();
 
 class CartDaoMongo {
     async getCarts(){
@@ -14,7 +12,7 @@ class CartDaoMongo {
 
     async getCartById(cartId){
         try {
-            const cart = await cartModel.findById(cartId);
+            const cart = await cartModel.findById(cartId).populate('products.product');
 
             if (cart) {
                 return cart;
@@ -35,34 +33,62 @@ class CartDaoMongo {
         }
     }
 
-    async updateCart(cartId, prodId){
+    async addProdToCart(cartId, prodId, qty){
         try {
-            const cart = await this.getCartById(cartId);
+            const quantity = qty ? {$set: {'products.$.quantity': qty}} : {$inc: {'products.$.quantity': 1}}; 
 
-            if (cart) {
-                const product = await productDaoMongo.getProductById(prodId);
+            const updatedCart = await cartModel.findOneAndUpdate(
+                {_id: cartId, 'products.product': prodId}, 
+                quantity, 
+                {new: true}
+            );
 
-                if (product) {
-                    const updatedCart = await cartModel.findOneAndUpdate(
-                        {_id: cartId, 'products.product_id': prodId}, 
-                        {$inc: {'products.$.quantity': 1}}, 
-                        {new: true}
-                    );
+            if (updatedCart) {
+                return updatedCart;
+            } else {
+                const updatedCart = await cartModel.findByIdAndUpdate(
+                    cartId, 
+                    {$push: {products: {product: prodId, quantity: qty || 1}}}, 
+                    {new: true}
+                );
 
-                    if (updatedCart) {
-                        return updatedCart;
-                    } else {
-                        const updatedCart = await cartModel.findByIdAndUpdate(
-                            cartId, 
-                            {$push: {products: {product_id: prodId, quantity: 1}}}, 
-                            {new: true}
-                        );
+                return updatedCart;
+            }
+        } catch (error) {
+            throw (error);
+        }
+    }
 
-                        return updatedCart;
-                    }
-                } else {
-                    throw new Error(`Producto no encontrado`);
-                }
+    async deleteProdInCart (cartId, prodId) {
+        try {
+            const updatedCart = await cartModel.findOneAndUpdate(
+                {_id: cartId, 'products.product': prodId}, 
+                {$pull: {products: {product: prodId}}}, 
+                {new: true}
+            );
+
+            if (updatedCart) {
+                return { 
+                    id: {cartId, prodId}, 
+                    msg: `Producto ID ${prodId} eliminado correctamente del carrito` 
+                };
+            } else {
+                throw new Error(`Producto no encontrado en este carrito`);
+            }
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    async clearCart (cartId) {
+        try {
+            const clearedCart = await cartModel.findByIdAndUpdate(cartId, {$set: {products: []}}, {new: true});
+
+            if (clearedCart){
+                return { 
+                    id: cartId, 
+                    msg: `Carrito ID ${cartId} vaciado correctamente` 
+                };
             } else {
                 throw new Error(`Carrito no encontrado`);
             }

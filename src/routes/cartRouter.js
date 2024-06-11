@@ -9,6 +9,10 @@ cartRouter.get('/:cid', cartController.getCartById);
 
 cartRouter.post('/', cartController.createCart);
 
-cartRouter.post('/:cid/product/:pid', cartController.updateCart);
+cartRouter.put('/:cid/products/:pid', cartController.addProdToCart);
+
+cartRouter.delete('/:cid/products/:pid', cartController.deleteProdInCart);
+
+cartRouter.delete('/:cid', cartController.clearCart);
 
 module.exports = cartRouter;

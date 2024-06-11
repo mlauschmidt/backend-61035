@@ -4,7 +4,8 @@ const cartSchema = new Schema({
     products: {
         type: [
             {
-                product_id: { 
+                _id: false,
+                product: { 
                     type: Schema.Types.ObjectId, 
                     ref: 'products' 
                 },

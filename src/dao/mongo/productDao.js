@@ -1,9 +1,12 @@
 const productModel = require('./models/productModel');
 
 class ProductDaoMongo {
-    async getProducts(){
-        try {
-            const products = await productModel.find().lean();
+    async getProducts(page, limit, query, sort){
+        try {            
+            const filter = query ? {"$or": [{"title": query}, {"category": query}]} : {};
+            const order = sort === 'asc' ? {"price": 1} : sort === 'desc' ? {"price": -1} : {}; 
+
+            const products = await productModel.paginate(filter, {page, limit, sort: order});
             return products;
         } catch (error) {
             throw (error);

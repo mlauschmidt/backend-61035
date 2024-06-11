@@ -65,11 +65,11 @@ class CartDaoFS {
                 const product = await productDaoFS.getProductById(prodId);
 
                 if (product){
-                    const prodIndex = cart.products.findIndex(product => product.product_id === prodId);
+                    const prodIndex = cart.products.findIndex(product => product.product === prodId);
                 
                     if (prodIndex === -1){
                         cart.products.push({ 
-                            product_id: prodId, 
+                            product: prodId, 
                             quantity: 1 
                         })
                     } else {
