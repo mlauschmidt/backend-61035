@@ -3,30 +3,17 @@ const productService = new ProductService();
 
 class ProductController {
     async getProducts (req, res, next) {
-        try {
+        try {            
             const { page = 1 , limit = 10, query = '', sort = ''} = req.query;
-            const products = await productService.getProducts(page, limit, query, sort);
+            let products = await productService.getProducts(page, limit, query, sort);
 
-            const prev = products.hasPrevPage === true ? 
-                        `http://localhost:8080/api/products?page=${products.prevPage}&limit=${limit}&query=${query}&sort=${sort}` : 
-                        null;
+            products = {
+                ...products,
+                prevLink: `http://localhost:8080/api/products${products.prevLink}`,
+                nextLink: `http://localhost:8080/api/products${products.nextLink}`
+            };
 
-            const next = products.hasNextPage === true ? 
-                        `http://localhost:8080/api/products?page=${products.nextPage}&limit=${limit}&query=${query}&sort=${sort}` : 
-                        null;
-
-            return res.status(200).json({
-                /* status: success */
-                payload: products.docs,
-                totalPages: products.totalPages,
-                prevPage: products.prevPage,
-                nextPage: products.nextPage,
-                page: products.page,
-                hasPrevPage: products.hasPrevPage,
-                hasNextPage: products.hasNextPage,
-                prevLink: prev,
-                nextLink: next
-            });
+            return res.status(200).json(products);
         } catch (error) {
             next (error);
         }

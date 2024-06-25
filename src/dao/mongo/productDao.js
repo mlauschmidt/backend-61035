@@ -6,7 +6,7 @@ class ProductDaoMongo {
             const filter = query ? {"$or": [{"title": query}, {"category": query}]} : {};
             const order = sort === 'asc' ? {"price": 1} : sort === 'desc' ? {"price": -1} : {}; 
 
-            const products = await productModel.paginate(filter, {page, limit, sort: order});
+            const products = await productModel.paginate(filter, {page, limit, sort: order, lean: true});
             return products;
         } catch (error) {
             throw (error);

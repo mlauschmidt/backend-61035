@@ -1,11 +1,27 @@
 <h1>PRODUCTOS EN TIEMPO REAL</h1>
 
+{{#if user}}
+    <div style="display: flex; justify-content: space-between">
+        <h2>Bienvenid@ {{user.name}}</h2>
+
+        <div style="display: flex; align-items: center">
+            <button style="padding: 5px; margin: 0px 5px" class="logoutButton" onclick="logout()">CERRAR SESIÓN</button>
+        </div>
+    </div>
+{{else}}
+    <div style="display: flex; justify-content: end">
+        <button style="padding: 5px; margin: 0px 5px" class="loginButton" ><a href="/login">INICIAR SESIÓN</a></button>
+
+        <button style="padding: 5px; margin: 0px 5px" class="registerButton" ><a href="/register">REGISTRARME</a></button>
+    </div>    
+{{/if}}
+
 <div id="productsContainer">
-    {{#each products}}
-        <div id="prod_{{id}}{{_id}}">
+    {{#each products.payload}}
+        <div id="prod_{{_id}}">
             <h3>{{title}}</h3>
             <ul>
-                <li>Id: {{id}}{{_id}}</li>
+                <li>Id: {{_id}}</li>
                 <li>Categoría: {{category}}</li>
                 <li>Descripción: {{description}}</li>
                 <li>Precio: ${{price}}</li>
@@ -15,9 +31,15 @@
                     <img src="{{this}}" alt="Imagen del producto">
                 {{/each}}
             </ul>
-            <button id="deleteProd_{{id}}{{_id}}" onclick="deleteProduct('{{id}}{{_id}}')">ELIMINAR</button>
+            <button id="deleteProd_{{_id}}" onclick="deleteProduct('{{_id}}')">ELIMINAR</button>
         </div>    
     {{/each}}    
+</div>
+
+{{!-- BOTONES DE PAGINACION --}}
+<div style="margin: 20px">
+    <a href="{{products.prevLink}}">Página previa</a>
+    <a href="{{products.nextLink}}">Página siguiente</a>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>

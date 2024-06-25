@@ -8,7 +8,28 @@ const productDao = new ProductDaoMongo();
 class ProductService {
     async getProducts (page, limit, query, sort) {
         try {
-            return await productDao.getProducts(page, limit, query, sort);
+            let products = await productDao.getProducts(page, limit, query, sort);
+
+            const prev = products.hasPrevPage === true ? 
+                        `?page=${products.prevPage}&limit=${limit}&query=${query}&sort=${sort}` : 
+                        null;
+
+            const next = products.hasNextPage === true ? 
+                        `?page=${products.nextPage}&limit=${limit}&query=${query}&sort=${sort}` : 
+                        null;
+
+            return products = {
+                /* status: success */
+                payload: products.docs,
+                totalPages: products.totalPages,
+                prevPage: products.prevPage,
+                nextPage: products.nextPage,
+                page: products.page,
+                hasPrevPage: products.hasPrevPage,
+                hasNextPage: products.hasNextPage,
+                prevLink: prev,
+                nextLink: next
+            };
         } catch (error) {
             throw (error);
         }

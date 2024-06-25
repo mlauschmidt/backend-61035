@@ -1,11 +1,11 @@
 <h1>PRODUCTOS</h1>
 
 <div id="productsContainer">
-    {{#each products}}
-        <div id="prod_{{id}}{{_id}}">
+    {{#each products.payload}}
+        <div id="prod_{{_id}}">
             <h3>{{title}}</h3>
             <ul>
-                <li>Id: {{id}}{{_id}}</li>
+                <li>Id: {{_id}}</li>
                 <li>Categoría: {{category}}</li>
                 <li>Descripción: {{description}}</li>
                 <li>Precio: ${{price}}</li>
@@ -17,4 +17,10 @@
             </ul>
         </div>    
     {{/each}}    
+</div>
+
+{{!-- BOTONES DE PAGINACION --}}
+<div style="margin: 20px">
+    <a href="{{products.prevLink}}">Página previa</a>
+    <a href="{{products.nextLink}}">Página siguiente</a>
 </div>

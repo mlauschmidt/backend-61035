@@ -4,10 +4,10 @@ const products = document.getElementById('productsContainer');
 
 socketClient.on('newProduct', (product) => {
     let productHTML = `
-        <div id="prod_${product.id}">
+        <div id="prod_${product._id}">
             <h3>${product.title}</h3>
             <ul>
-                <li>Id: ${product.id}</li>
+                <li>Id: ${product._id}</li>
                 <li>Categoría: ${product.category}</li>
                 <li>Descripción: ${product.description}</li>
                 <li>Precio: $${product.price}</li>
@@ -19,7 +19,7 @@ socketClient.on('newProduct', (product) => {
     });
 
     productHTML += `</ul>
-                    <button id="deleteProd_${product.id}" onclick="deleteProduct('${product.id}')">ELIMINAR</button>
+                    <button id="deleteProd_${product._id}" onclick="deleteProduct('${product._id}')">ELIMINAR</button>
                 </div>`;
     
     products.innerHTML += productHTML;
@@ -45,3 +45,14 @@ socketClient.on('deleteProduct', (id) => {
 
     productsContainer.removeChild(prodId);
 })
+
+const logout = () => {
+    fetch('/api/sessions/logout', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then (() => location.assign('/login'))
+    .catch (e => console.log(e))
+}

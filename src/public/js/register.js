@@ -1,14 +1,12 @@
-const socketClient = io();
-
-const form = document.getElementById('productForm');
+const form = document.getElementById('registerForm');
 
 form.onsubmit = (e) => {
     e.preventDefault();
-
+    
     const formData = new FormData(form);
     const formDataJson = Object.fromEntries(formData.entries());
-    
-    fetch('/api/products', {
+
+    fetch('/api/sessions/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -17,11 +15,11 @@ form.onsubmit = (e) => {
     })
     .then (response => response.json())
     .then (resp => {
-        if (resp._id) {
-            alert('Producto cargado con éxito');
-            form.reset();
-        } else {
+        if (resp.msg) {
             alert(`Error: ${resp.msg}`);
+        } else {
+            alert('Usuario registrado con éxito');
+            location.assign('/login');
         }
     })
     .catch (e => console.log(e))
